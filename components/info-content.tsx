@@ -170,12 +170,13 @@ export function InfoContent() {
               className="group flex flex-col items-center gap-4 rounded-2xl border-2 border-primary/15 bg-card p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
             >
               {member.image ? (
-                <div className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-primary/20 transition-all duration-300 group-hover:border-primary/50 sm:h-28 sm:w-28">
+                <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-primary/20 transition-all duration-300 group-hover:border-primary/50 sm:h-28 sm:w-28">
                   <Image
                     src={member.image}
                     alt={member.name}
-                    fill
-                    className="object-cover"
+                    width={112}
+                    height={112}
+                    className="h-full w-full object-cover"
                   />
                 </div>
               ) : (
