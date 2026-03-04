@@ -10,13 +10,17 @@ import {
   GraduationCap,
   Crown,
   User,
+  Sunrise,
+  Utensils,
+  Cookie,
+  Coffee,
 } from "lucide-react"
 import { canteenInfo } from "@/lib/data"
 
 const teamMembers = [
   {
     name: "Soham Patil",
-    image: "/images/team-leader.jpg",
+    image: "/images/soham-patil.jpeg",
   },
   {
     name: "Netra Sarvankar",
@@ -36,12 +40,21 @@ const facultyMembers = [
   {
     name: "Mrs. Harshada Deshpande",
     designation: "Faculty Guide",
+    image: "/images/harshada-deshpande.jpeg",
   },
   {
     name: "Dr. Smriti Pathak",
     designation: "Head of Department",
+    image: "/images/smriti-pathak.jpeg",
   },
 ]
+
+const timingIcons: Record<string, React.ReactNode> = {
+  Breakfast: <Sunrise className="h-5 w-5 text-primary" />,
+  Lunch: <Utensils className="h-5 w-5 text-primary" />,
+  Snacks: <Cookie className="h-5 w-5 text-primary" />,
+  Beverages: <Coffee className="h-5 w-5 text-primary" />,
+}
 
 export function InfoContent() {
   return (
@@ -58,23 +71,35 @@ export function InfoContent() {
 
       {/* ===== CANTEEN INFORMATION SECTION ===== */}
       <section className="flex flex-col gap-6">
-        {/* Canteen Timing */}
+        {/* Canteen Timings - Category Based */}
         <div className="flex flex-col gap-4 rounded-2xl border-2 border-primary/15 bg-card p-6 shadow-md">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
               <Clock className="h-5 w-5 text-primary" />
             </div>
             <h2 className="font-serif text-xl font-bold text-card-foreground">
-              Canteen Timing
+              Canteen Timings
             </h2>
           </div>
-          <div className="flex items-center justify-center rounded-xl bg-primary/5 p-5">
-            <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-primary" />
-              <span className="text-xl font-bold text-primary sm:text-2xl">
-                10:00 AM &ndash; 5:00 PM
-              </span>
-            </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {canteenInfo.timings.map((timing) => (
+              <div
+                key={timing.label}
+                className="flex items-center gap-4 rounded-xl border border-border bg-primary/5 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  {timingIcons[timing.label] || <Clock className="h-5 w-5 text-primary" />}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary">
+                    {timing.label}
+                  </span>
+                  <span className="text-sm font-semibold text-card-foreground">
+                    {timing.time}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -211,8 +236,14 @@ export function InfoContent() {
               key={faculty.name}
               className="group flex flex-col items-center gap-4 rounded-2xl border-2 border-primary/15 bg-card p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
             >
-              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-primary/20 bg-primary/5 transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/10 sm:h-28 sm:w-28">
-                <User className="h-10 w-10 text-primary/50 sm:h-12 sm:w-12" />
+              <div className="h-28 w-28 overflow-hidden rounded-full border-4 border-primary/20 transition-all duration-300 group-hover:border-primary/50 sm:h-32 sm:w-32">
+                <Image
+                  src={faculty.image}
+                  alt={faculty.name}
+                  width={128}
+                  height={128}
+                  className="h-full w-full object-cover"
+                />
               </div>
               <div className="flex flex-col items-center gap-1.5 text-center">
                 <div className="flex items-center gap-1.5">

@@ -145,10 +145,10 @@ export const menuItems: MenuItem[] = [
 export const canteenInfo = {
   name: "Smart College Canteen PCCOER",
   timings: [
-    { label: "Breakfast", time: "7:30 AM - 9:30 AM" },
-    { label: "Lunch", time: "12:00 PM - 2:30 PM" },
-    { label: "Snacks", time: "4:00 PM - 6:00 PM" },
-    { label: "Beverages", time: "7:30 AM - 6:00 PM" },
+    { label: "Breakfast", time: "8:30 AM – 10:30 AM" },
+    { label: "Lunch", time: "12:00 PM – 2:30 PM" },
+    { label: "Snacks", time: "3:30 PM – 5:00 PM" },
+    { label: "Beverages", time: "10:00 AM – 5:00 PM" },
   ],
   notices: [
     "Special Biryani available on Fridays!",

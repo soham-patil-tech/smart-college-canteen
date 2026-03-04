@@ -14,10 +14,23 @@ import {
   LogOut,
   Mail,
   KeyRound,
+  Clock,
+  Save,
+  Sunrise,
+  Utensils,
+  Cookie,
+  Coffee,
 } from "lucide-react"
-import { menuItems as initialMenuItems, categoryLabels } from "@/lib/data"
+import { menuItems as initialMenuItems, categoryLabels, canteenInfo } from "@/lib/data"
 import type { MenuItem } from "@/lib/data"
 import { cn } from "@/lib/utils"
+
+const timingIcons: Record<string, React.ReactNode> = {
+  Breakfast: <Sunrise className="h-4 w-4 text-primary" />,
+  Lunch: <Utensils className="h-4 w-4 text-primary" />,
+  Snacks: <Cookie className="h-4 w-4 text-primary" />,
+  Beverages: <Coffee className="h-4 w-4 text-primary" />,
+}
 
 export function AdminContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -35,6 +48,10 @@ export function AdminContent() {
     available: true,
     description: "",
   })
+  const [timings, setTimings] = useState(
+    canteenInfo.timings.map((t) => ({ ...t }))
+  )
+  const [timingsSaved, setTimingsSaved] = useState(false)
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -82,6 +99,18 @@ export function AdminContent() {
       description: "",
     })
     setIsAdding(false)
+  }
+
+  const handleUpdateTiming = (index: number, time: string) => {
+    setTimings((prev) =>
+      prev.map((t, i) => (i === index ? { ...t, time } : t))
+    )
+    setTimingsSaved(false)
+  }
+
+  const handleSaveTimings = () => {
+    setTimingsSaved(true)
+    setTimeout(() => setTimingsSaved(false), 3000)
   }
 
   // ---- Login Screen ----
@@ -189,10 +218,10 @@ export function AdminContent() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="font-serif text-3xl font-bold text-foreground">
-            Menu Management
+            Admin Dashboard
           </h1>
           <p className="text-sm text-muted-foreground">
-            Add, edit, or remove menu items ({items.length} total)
+            Manage menu items and canteen timings
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -211,6 +240,70 @@ export function AdminContent() {
             Logout
           </button>
         </div>
+      </div>
+
+      {/* ===== CANTEEN TIMING MANAGEMENT ===== */}
+      <div className="rounded-2xl border-2 border-primary/20 bg-card p-6 shadow-md">
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <Clock className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex flex-col">
+            <h2 className="font-serif text-lg font-bold text-card-foreground">
+              Canteen Timing Management
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Update the timings for each meal category
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {timings.map((timing, index) => (
+            <div
+              key={timing.label}
+              className="flex flex-col gap-2 rounded-xl border border-border bg-background p-4 transition-all duration-200 hover:border-primary/30"
+            >
+              <div className="flex items-center gap-2">
+                {timingIcons[timing.label]}
+                <label className="text-sm font-bold text-card-foreground">
+                  {timing.label} Timing
+                </label>
+              </div>
+              <input
+                type="text"
+                value={timing.time}
+                onChange={(e) => handleUpdateTiming(index, e.target.value)}
+                placeholder="e.g. 8:30 AM - 10:30 AM"
+                className="rounded-xl border border-input bg-card px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
+              />
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 flex items-center gap-3">
+          <button
+            onClick={handleSaveTimings}
+            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+          >
+            <Save className="h-4 w-4" />
+            Save Timings
+          </button>
+          {timingsSaved && (
+            <span className="flex items-center gap-1.5 text-sm font-medium text-success">
+              <Check className="h-4 w-4" />
+              Timings saved successfully
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* ===== MENU MANAGEMENT ===== */}
+      <div className="flex items-center gap-3">
+        <h2 className="font-serif text-xl font-bold text-foreground">
+          Menu Items
+        </h2>
+        <span className="rounded-lg bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+          {items.length} items
+        </span>
       </div>
 
       {/* Add Item Form */}
