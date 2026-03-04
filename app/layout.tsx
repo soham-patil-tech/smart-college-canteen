@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Nunito, Nunito_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { PWARegister } from '@/components/pwa-register'
 import './globals.css'
 
 const nunito = Nunito({
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
   title: 'Smart College Canteen - Daily Menu & Info',
   description: 'Browse today\'s menu, check canteen timings, and manage your college canteen experience.',
   generator: 'v0.app',
+  manifest: '/manifest.json',
   icons: {
     icon: [
       {
@@ -39,8 +41,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f5ebe0' },
-    { media: '(prefers-color-scheme: dark)', color: '#2d2520' },
+    { media: '(prefers-color-scheme: light)', color: '#e8f0fe' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a2332' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -63,6 +65,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <PWARegister />
         </ThemeProvider>
         <Analytics />
       </body>

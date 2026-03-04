@@ -11,6 +11,9 @@ import {
   Check,
   Eye,
   EyeOff,
+  LogOut,
+  Mail,
+  KeyRound,
 } from "lucide-react"
 import { menuItems as initialMenuItems, categoryLabels } from "@/lib/data"
 import type { MenuItem } from "@/lib/data"
@@ -18,7 +21,7 @@ import { cn } from "@/lib/utils"
 
 export function AdminContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState("")
@@ -35,12 +38,15 @@ export function AdminContent() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    // Demo credentials
-    if (username === "admin" && password === "admin123") {
+    if (!email || !password) {
+      setLoginError("Please fill in all fields")
+      return
+    }
+    if (email === "admin@canteen.edu" && password === "admin123") {
       setIsLoggedIn(true)
       setLoginError("")
     } else {
-      setLoginError("Invalid credentials. Try admin / admin123")
+      setLoginError("Invalid credentials. Try admin@canteen.edu / admin123")
     }
   }
 
@@ -78,10 +84,11 @@ export function AdminContent() {
     setIsAdding(false)
   }
 
+  // ---- Login Screen ----
   if (!isLoggedIn) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4 py-16">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 shadow-md shadow-primary/10">
           <Lock className="h-8 w-8 text-primary" />
         </div>
         <div className="flex flex-col items-center gap-1">
@@ -95,47 +102,53 @@ export function AdminContent() {
 
         <form
           onSubmit={handleLogin}
-          className="flex w-full flex-col gap-4 rounded-xl border border-border bg-card p-6"
+          className="flex w-full flex-col gap-5 rounded-2xl border border-border bg-card p-6 shadow-lg shadow-primary/5"
         >
+          {/* Email Field */}
           <div className="flex flex-col gap-1.5">
             <label
-              htmlFor="username"
-              className="text-sm font-medium text-card-foreground"
+              htmlFor="email"
+              className="text-sm font-semibold text-card-foreground"
             >
-              Username
+              Email
             </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
-              className="rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              required
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@canteen.edu"
+                className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
+                required
+              />
+            </div>
           </div>
 
+          {/* Password Field */}
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="password"
-              className="text-sm font-medium text-card-foreground"
+              className="text-sm font-semibold text-card-foreground"
             >
               Password
             </label>
             <div className="relative">
+              <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -148,12 +161,14 @@ export function AdminContent() {
           </div>
 
           {loginError && (
-            <p className="text-sm text-destructive">{loginError}</p>
+            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm font-medium text-destructive">
+              {loginError}
+            </p>
           )}
 
           <button
             type="submit"
-            className="flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
           >
             <LogIn className="h-4 w-4" />
             Sign In
@@ -161,14 +176,15 @@ export function AdminContent() {
         </form>
 
         <p className="text-xs text-muted-foreground">
-          Demo credentials: admin / admin123
+          Demo: admin@canteen.edu / admin123
         </p>
       </div>
     )
   }
 
+  // ---- Admin Dashboard ----
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
@@ -182,15 +198,16 @@ export function AdminContent() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsAdding(true)}
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
           >
             <Plus className="h-4 w-4" />
             Add Item
           </button>
           <button
             onClick={() => setIsLoggedIn(false)}
-            className="rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-card-foreground transition-colors hover:bg-secondary"
+            className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-card-foreground transition-colors hover:bg-secondary"
           >
+            <LogOut className="h-4 w-4" />
             Logout
           </button>
         </div>
@@ -198,14 +215,14 @@ export function AdminContent() {
 
       {/* Add Item Form */}
       {isAdding && (
-        <div className="rounded-xl border border-primary/30 bg-card p-5">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="rounded-2xl border-2 border-primary/20 bg-card p-6 shadow-md">
+          <div className="mb-5 flex items-center justify-between">
             <h3 className="font-serif text-lg font-bold text-card-foreground">
               Add New Item
             </h3>
             <button
               onClick={() => setIsAdding(false)}
-              className="text-muted-foreground hover:text-foreground"
+              className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               aria-label="Close add form"
             >
               <X className="h-5 w-5" />
@@ -213,7 +230,7 @@ export function AdminContent() {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                 Name
               </label>
               <input
@@ -223,11 +240,11 @@ export function AdminContent() {
                   setNewItem({ ...newItem, name: e.target.value })
                 }
                 placeholder="Item name"
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                 Price (INR)
               </label>
               <input
@@ -237,11 +254,11 @@ export function AdminContent() {
                   setNewItem({ ...newItem, price: Number(e.target.value) })
                 }
                 placeholder="0"
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                 Category
               </label>
               <select
@@ -252,7 +269,7 @@ export function AdminContent() {
                     category: e.target.value as MenuItem["category"],
                   })
                 }
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               >
                 <option value="breakfast">Breakfast</option>
                 <option value="lunch">Lunch</option>
@@ -261,7 +278,7 @@ export function AdminContent() {
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                 Description
               </label>
               <input
@@ -271,12 +288,12 @@ export function AdminContent() {
                   setNewItem({ ...newItem, description: e.target.value })
                 }
                 placeholder="Short description"
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-2">
-            <label className="flex items-center gap-2 text-sm text-card-foreground">
+            <label className="flex items-center gap-2 text-sm font-medium text-card-foreground">
               <input
                 type="checkbox"
                 checked={newItem.available}
@@ -288,18 +305,18 @@ export function AdminContent() {
               Available
             </label>
           </div>
-          <div className="mt-4 flex gap-2">
+          <div className="mt-5 flex gap-2">
             <button
               onClick={handleAddItem}
               disabled={!newItem.name || newItem.price <= 0}
-              className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               <Check className="h-4 w-4" />
               Add Item
             </button>
             <button
               onClick={() => setIsAdding(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-card-foreground transition-colors hover:bg-secondary"
+              className="rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-card-foreground transition-colors hover:bg-secondary"
             >
               Cancel
             </button>
@@ -308,25 +325,25 @@ export function AdminContent() {
       )}
 
       {/* Menu Items Table */}
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         {/* Desktop Table */}
         <div className="hidden md:block">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border bg-secondary/50">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <tr className="border-b border-border bg-primary/5">
+                <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-primary">
                   Item
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-primary">
                   Category
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-primary">
                   Price
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-primary">
                   Status
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <th className="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-primary">
                   Actions
                 </th>
               </tr>
@@ -337,7 +354,7 @@ export function AdminContent() {
                   key={item.id}
                   className="transition-colors hover:bg-secondary/30"
                 >
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3.5">
                     {editingItem?.id === item.id ? (
                       <input
                         type="text"
@@ -348,11 +365,11 @@ export function AdminContent() {
                             name: e.target.value,
                           })
                         }
-                        className="w-full rounded border border-input bg-background px-2 py-1 text-sm text-foreground focus:border-primary focus:outline-none"
+                        className="w-full rounded-lg border border-input bg-background px-2.5 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                       />
                     ) : (
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-card-foreground">
+                        <span className="text-sm font-semibold text-card-foreground">
                           {item.name}
                         </span>
                         {item.description && (
@@ -363,12 +380,12 @@ export function AdminContent() {
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-3">
-                    <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-lg bg-secondary px-2.5 py-1 text-xs font-semibold text-secondary-foreground">
                       {categoryLabels[item.category]}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3.5">
                     {editingItem?.id === item.id ? (
                       <input
                         type="number"
@@ -379,41 +396,45 @@ export function AdminContent() {
                             price: Number(e.target.value),
                           })
                         }
-                        className="w-20 rounded border border-input bg-background px-2 py-1 text-sm text-foreground focus:border-primary focus:outline-none"
+                        className="w-20 rounded-lg border border-input bg-background px-2.5 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                       />
                     ) : (
-                      <span className="text-sm font-semibold text-card-foreground">
+                      <span className="text-sm font-bold text-primary">
                         {"₹"}{item.price}
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3.5">
                     <button
                       onClick={() => handleToggleAvailability(item.id)}
                       className={cn(
-                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors",
+                        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold transition-colors",
                         item.available
-                          ? "bg-success/10 text-success hover:bg-success/20"
-                          : "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                          ? "bg-success/12 text-success hover:bg-success/20"
+                          : "bg-destructive/12 text-destructive hover:bg-destructive/20"
                       )}
                     >
+                      <span className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        item.available ? "bg-success" : "bg-destructive"
+                      )} />
                       {item.available ? "Available" : "Unavailable"}
                     </button>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3.5">
                     <div className="flex items-center justify-end gap-1">
                       {editingItem?.id === item.id ? (
                         <>
                           <button
                             onClick={handleSaveEdit}
-                            className="rounded-lg p-2 text-success hover:bg-success/10"
+                            className="rounded-lg p-2 text-success transition-colors hover:bg-success/10"
                             aria-label="Save changes"
                           >
                             <Check className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => setEditingItem(null)}
-                            className="rounded-lg p-2 text-muted-foreground hover:bg-secondary"
+                            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary"
                             aria-label="Cancel edit"
                           >
                             <X className="h-4 w-4" />
@@ -423,14 +444,14 @@ export function AdminContent() {
                         <>
                           <button
                             onClick={() => setEditingItem({ ...item })}
-                            className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
                             aria-label={`Edit ${item.name}`}
                           >
                             <Pencil className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(item.id)}
-                            className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                             aria-label={`Delete ${item.name}`}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -451,7 +472,7 @@ export function AdminContent() {
             <div key={item.id} className="flex flex-col gap-3 p-4">
               <div className="flex items-start justify-between">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-medium text-card-foreground">
+                  <span className="text-sm font-semibold text-card-foreground">
                     {item.name}
                   </span>
                   {item.description && (
@@ -466,32 +487,36 @@ export function AdminContent() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+                  <span className="rounded-lg bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
                     {categoryLabels[item.category]}
                   </span>
                   <button
                     onClick={() => handleToggleAvailability(item.id)}
                     className={cn(
-                      "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold",
+                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold",
                       item.available
-                        ? "bg-success/10 text-success"
-                        : "bg-destructive/10 text-destructive"
+                        ? "bg-success/12 text-success"
+                        : "bg-destructive/12 text-destructive"
                     )}
                   >
+                    <span className={cn(
+                      "h-1.5 w-1.5 rounded-full",
+                      item.available ? "bg-success" : "bg-destructive"
+                    )} />
                     {item.available ? "Available" : "Unavailable"}
                   </button>
                 </div>
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => setEditingItem({ ...item })}
-                    className="rounded-lg p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
                     aria-label={`Edit ${item.name}`}
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="rounded-lg p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                    className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                     aria-label={`Delete ${item.name}`}
                   >
                     <Trash2 className="h-4 w-4" />

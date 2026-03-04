@@ -2,14 +2,19 @@ import { UtensilsCrossed } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="hidden border-t border-border bg-card pb-4 pt-8 md:block">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <UtensilsCrossed className="h-4 w-4" />
-          <span className="text-sm font-medium">Smart College Canteen</span>
+    <footer className="hidden border-t border-primary/20 bg-primary pb-6 pt-8 md:block">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4">
+        <div className="flex items-center gap-2 text-primary-foreground">
+          <UtensilsCrossed className="h-5 w-5" />
+          <span className="font-serif text-base font-bold">
+            Smart College Canteen
+          </span>
         </div>
-        <p className="text-center text-xs text-muted-foreground">
-          Daily Menu & Information System. Serving fresh meals to students every day.
+        <p className="text-center text-sm font-medium text-primary-foreground/80">
+          {"Smart College Canteen \u2013 Daily Menu & Information System"}
+        </p>
+        <p className="text-center text-xs text-primary-foreground/60">
+          Developed by BCA Students
         </p>
       </div>
     </footer>

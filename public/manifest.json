@@ -1,0 +1,28 @@
+{
+  "name": "Smart College Canteen",
+  "short_name": "Canteen",
+  "description": "Smart College Canteen - Daily Menu & Information System",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e8f0fe",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["food", "education"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon-light-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
