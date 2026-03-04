@@ -2,8 +2,20 @@ import { Navbar } from "@/components/navbar"
 import { BottomNav } from "@/components/bottom-nav"
 import { Footer } from "@/components/footer"
 import { MenuContent } from "@/components/menu-content"
+import { supabase } from "@/lib/supabase"
 
-export default function MenuPage() {
+async function getMenu() {
+  const { data } = await supabase
+    .from("menu")
+    .select("*")
+
+  return data
+}
+
+export default async function MenuPage() {
+
+  const menu = await getMenu()
+
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <Navbar />
