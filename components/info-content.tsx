@@ -59,7 +59,7 @@ export function InfoContent() {
           Canteen Information
         </h1>
         <p className="text-sm text-muted-foreground">
-          Everything you need to know about the college canteen
+          Everything you need to know about the PCCOER college canteen
         </p>
       </div>
 
@@ -132,7 +132,7 @@ export function InfoContent() {
             </h3>
           </div>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Ground Floor, Main Campus Building, Near the Library Wing
+            Ground Floor, PCCOER Main Campus, Ravet, Pune - 412101
           </p>
         </div>
 
@@ -152,7 +152,7 @@ export function InfoContent() {
             </div>
             <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 text-primary/60" />
-              <span>canteen@college.edu</span>
+              <span>canteen@pccoer.in</span>
             </div>
           </div>
         </div>

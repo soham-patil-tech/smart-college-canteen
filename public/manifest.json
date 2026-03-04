@@ -1,7 +1,7 @@
 {
-  "name": "Smart College Canteen",
-  "short_name": "Canteen",
-  "description": "Smart College Canteen - Daily Menu & Information System",
+  "name": "Smart College Canteen PCCOER",
+  "short_name": "Canteen PCCOER",
+  "description": "Smart College Canteen PCCOER - Daily Menu & Information System",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#e8f0fe",

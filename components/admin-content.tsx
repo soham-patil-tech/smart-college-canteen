@@ -96,7 +96,7 @@ export function AdminContent() {
             Admin Login
           </h1>
           <p className="text-sm text-muted-foreground">
-            Sign in to manage the canteen menu
+            Sign in to manage the PCCOER canteen menu
           </p>
         </div>
 

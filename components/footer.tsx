@@ -7,11 +7,11 @@ export function Footer() {
         <div className="flex items-center gap-2 text-primary-foreground">
           <UtensilsCrossed className="h-5 w-5" />
           <span className="font-serif text-base font-bold">
-            Smart College Canteen
+            Smart College Canteen PCCOER
           </span>
         </div>
         <p className="text-center text-sm font-medium text-primary-foreground/80">
-          {"Smart College Canteen \u2013 Daily Menu & Information System"}
+          {"Smart College Canteen PCCOER \u2013 Daily Menu & Information System"}
         </p>
         <p className="text-center text-xs text-primary-foreground/60">
           Developed by BCA Students

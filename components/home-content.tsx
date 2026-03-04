@@ -22,46 +22,48 @@ export function HomeContent() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Full-Width College Banner */}
+      {/* Full-Width PCCOER College Banner */}
       <section className="relative w-full overflow-hidden">
-        <div className="relative h-[280px] sm:h-[340px] md:h-[400px]">
+        <div className="relative w-full">
           <Image
-            src="/images/college-banner.jpg"
-            alt="College campus building"
-            fill
-            className="object-cover"
+            src="/images/pccoer-banner.jpeg"
+            alt="Pimpri Chinchwad College of Engineering and Research banner with college logos and accreditation details"
+            width={1920}
+            height={200}
+            className="w-full object-contain"
             priority
           />
-          {/* Semi-transparent overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/80" />
-          {/* Banner content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-            <h1 className="font-serif text-3xl font-extrabold text-primary-foreground drop-shadow-md sm:text-4xl md:text-5xl text-balance">
-              ABC College of Technology
-            </h1>
-            <div className="mt-3 h-1 w-20 rounded-full bg-primary-foreground/50" />
-            <p className="mt-4 max-w-xl text-sm font-semibold text-primary-foreground/90 drop-shadow sm:text-base md:text-lg text-balance">
-              {"Smart College Canteen \u2013 Daily Menu & Information System"}
-            </p>
-          </div>
+        </div>
+      </section>
+
+      {/* Project Title Below Banner */}
+      <section className="mx-auto w-full max-w-6xl px-4">
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 px-6 py-6 text-center md:py-8">
+          <h1 className="font-serif text-2xl font-extrabold leading-tight text-foreground sm:text-3xl md:text-4xl text-balance">
+            {"Smart College Canteen \u2013 Daily Menu & Information System"}
+          </h1>
+          <div className="h-1 w-16 rounded-full bg-primary" />
+          <p className="max-w-lg text-sm text-muted-foreground md:text-base">
+            {"Pimpri Chinchwad College of Engineering & Research (PCCOER)"}
+          </p>
         </div>
       </section>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pb-8">
         {/* Hero Card */}
-        <section className="flex flex-col gap-4 rounded-2xl border border-primary/20 bg-primary/5 p-6 md:p-8">
+        <section className="flex flex-col gap-4 rounded-2xl border border-primary/20 bg-card p-6 shadow-sm md:p-8">
           <div className="flex items-center gap-2 text-primary">
             <Sparkles className="h-5 w-5" />
             <span className="text-sm font-bold uppercase tracking-wider">
               {"Today's Special"}
             </span>
           </div>
-          <h2 className="font-serif text-2xl font-bold leading-tight text-foreground md:text-3xl text-balance">
+          <h2 className="font-serif text-2xl font-bold leading-tight text-card-foreground md:text-3xl text-balance">
             Fresh meals, made with care for our students.
           </h2>
           <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
             {availableCount} of {totalCount} items available right now. Check
-            {"what's"} cooking today!
+            {" what's"} cooking today!
           </p>
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Link
@@ -130,7 +132,7 @@ export function HomeContent() {
 
         {/* Notices */}
         {canteenInfo.notices.length > 0 && (
-          <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5">
+          <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-sm">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
                 <Bell className="h-4 w-4 text-primary" />

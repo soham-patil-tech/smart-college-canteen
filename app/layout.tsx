@@ -16,8 +16,8 @@ const nunitoSans = Nunito_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Smart College Canteen - Daily Menu & Info',
-  description: 'Browse today\'s menu, check canteen timings, and manage your college canteen experience.',
+  title: 'Smart College Canteen PCCOER - Daily Menu & Information System',
+  description: 'Pimpri Chinchwad College of Engineering & Research - Browse today\'s menu, check canteen timings, and manage your college canteen experience.',
   generator: 'v0.app',
   manifest: '/manifest.json',
   icons: {

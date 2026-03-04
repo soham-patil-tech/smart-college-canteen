@@ -143,7 +143,7 @@ export const menuItems: MenuItem[] = [
 ]
 
 export const canteenInfo = {
-  name: "Smart College Canteen",
+  name: "Smart College Canteen PCCOER",
   timings: [
     { label: "Breakfast", time: "7:30 AM - 9:30 AM" },
     { label: "Lunch", time: "12:00 PM - 2:30 PM" },

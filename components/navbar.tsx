@@ -49,7 +49,7 @@ export function Navbar() {
               Smart Canteen
             </span>
             <span className="hidden text-[10px] leading-tight text-primary-foreground/70 sm:block">
-              Daily Menu & Info
+              PCCOER - Daily Menu & Info
             </span>
           </div>
         </Link>
