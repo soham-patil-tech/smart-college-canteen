@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import React from "react"
+import { supabase } from "@/lib/supabase"
 import {
   Lock,
   LogIn,
@@ -21,7 +23,7 @@ import {
   Cookie,
   Coffee,
 } from "lucide-react"
-import { menuItems as initialMenuItems, categoryLabels, canteenInfo } from "@/lib/data"
+import { categoryLabels } from "@/lib/data"
 import type { MenuItem } from "@/lib/data"
 import { cn } from "@/lib/utils"
 
@@ -38,7 +40,8 @@ export function AdminContent() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState("")
-  const [items, setItems] = useState<MenuItem[]>(initialMenuItems)
+  const [items, setItems] = useState<MenuItem[]>([])
+  
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [newItem, setNewItem] = useState<Omit<MenuItem, "id">>({
@@ -48,9 +51,41 @@ export function AdminContent() {
     available: true,
     description: "",
   })
-  const [timings, setTimings] = useState(
-    canteenInfo.timings.map((t) => ({ ...t }))
-  )
+  useEffect(() => {
+  fetchMenu()
+  fetchTimings()
+}, [])
+
+async function fetchMenu() {
+
+  const { data, error } = await supabase
+    .from("menu")
+    .select("*")
+
+  if (!error && data) {
+    setItems(data)
+  }
+
+}
+async function fetchTimings() {
+
+  const { data, error } = await supabase
+    .from("timings")
+    .select("*")
+
+  if (!error && data) {
+
+    const formatted = data.map(t => ({
+      label: t.category,
+      time: `${t.start_time} - ${t.end_time}`
+    }))
+
+    setTimings(formatted)
+
+  }
+
+}
+  const [timings, setTimings] = useState<any[]>([])
   const [timingsSaved, setTimingsSaved] = useState(false)
 
   const handleLogin = (e: React.FormEvent) => {
@@ -67,39 +102,102 @@ export function AdminContent() {
     }
   }
 
-  const handleDelete = (id: string) => {
-    setItems(items.filter((item) => item.id !== id))
+ const handleDelete = async (id: number) => {
+
+  const { error } = await supabase
+    .from("menu")
+    .delete()
+    .eq("id", id)
+
+  if (error) {
+    console.error(error)
+    alert("Delete failed")
+    return
   }
 
-  const handleToggleAvailability = (id: string) => {
-    setItems(
-      items.map((item) =>
-        item.id === id ? { ...item, available: !item.available } : item
-      )
-    )
+  fetchMenu()
+
+}
+
+ const handleToggleAvailability = async (id: number) => {
+
+  const item = items.find((i) => Number(i.id) === id)
+  if (!item) return
+
+  const newStatus = !item.available
+
+  const { error } = await supabase
+    .from("menu")
+    .update({ available: newStatus })
+    .eq("id", String(id))   // ⭐ IMPORTANT
+
+  if (error) {
+    console.error("Toggle error:", error)
+    alert("Failed to update status")
+    return
   }
 
-  const handleSaveEdit = () => {
-    if (!editingItem) return
-    setItems(
-      items.map((item) => (item.id === editingItem.id ? editingItem : item))
-    )
-    setEditingItem(null)
-  }
+  fetchMenu()
+}
 
-  const handleAddItem = () => {
-    if (!newItem.name || newItem.price <= 0) return
-    const id = `custom-${Date.now()}`
-    setItems([...items, { ...newItem, id }])
-    setNewItem({
-      name: "",
-      price: 0,
-      category: "breakfast",
-      available: true,
-      description: "",
+  const handleSaveEdit = async () => {
+
+  if (!editingItem) return
+
+  const { error } = await supabase
+    .from("menu")
+    .update({
+      name: editingItem.name,
+      price: editingItem.price,
+      description: editingItem.description,
+      category: editingItem.category
     })
-    setIsAdding(false)
+    .eq("id", editingItem.id)
+
+  if (error) {
+    console.error(error)
+    alert("Update failed")
+    return
   }
+
+  fetchMenu()
+  setEditingItem(null)
+}
+
+  const handleAddItem = async () => {
+  if (!newItem.name || newItem.price <= 0) return
+
+  const { data, error } = await supabase
+    .from("menu")
+    .insert([
+      {
+        name: newItem.name,
+        price: newItem.price,
+        category: newItem.category,
+        available: newItem.available,
+        description: newItem.description,
+      },
+    ])
+    .select()
+
+  if (error) {
+    console.error(error)
+    alert("Failed to add item")
+    return
+  }
+
+  fetchMenu()
+
+  setNewItem({
+    name: "",
+    price: 0,
+    category: "breakfast",
+    available: true,
+    description: "",
+  })
+
+  setIsAdding(false)
+}
 
   const handleUpdateTiming = (index: number, time: string) => {
     setTimings((prev) =>
@@ -108,11 +206,42 @@ export function AdminContent() {
     setTimingsSaved(false)
   }
 
-  const handleSaveTimings = () => {
+  const handleSaveTimings = async () => {
+
+  try {
+
+    for (const timing of timings) {
+
+      const parts = timing.time.split("-")
+
+      if (parts.length < 2) continue
+
+      const start = parts[0].trim()
+      const end = parts[1].trim()
+
+      const { error } = await supabase
+        .from("timings")
+        .update({
+          start_time: start,
+          end_time: end
+        })
+        .eq("category", timing.label)
+
+      if (error) {
+        console.error(error)
+      }
+
+    }
+
     setTimingsSaved(true)
+
     setTimeout(() => setTimingsSaved(false), 3000)
+
+  } catch (err) {
+    console.error(err)
   }
 
+}
   // ---- Login Screen ----
   if (!isLoggedIn) {
     return (
@@ -499,7 +628,7 @@ export function AdminContent() {
                   </td>
                   <td className="px-5 py-3.5">
                     <button
-                      onClick={() => handleToggleAvailability(item.id)}
+                      onClick={() => handleToggleAvailability(Number(item.id))}
                       className={cn(
                         "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold transition-colors",
                         item.available
@@ -543,7 +672,7 @@ export function AdminContent() {
                             <Pencil className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => handleDelete(Number(item.id))}
                             className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                             aria-label={`Delete ${item.name}`}
                           >
@@ -584,7 +713,7 @@ export function AdminContent() {
                     {categoryLabels[item.category]}
                   </span>
                   <button
-                    onClick={() => handleToggleAvailability(item.id)}
+                    onClick={() => handleDelete(Number(item.id))}
                     className={cn(
                       "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold",
                       item.available
@@ -608,7 +737,7 @@ export function AdminContent() {
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleToggleAvailability(Number(item.id))}
                     className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                     aria-label={`Delete ${item.name}`}
                   >

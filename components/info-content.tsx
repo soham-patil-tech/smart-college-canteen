@@ -24,15 +24,15 @@ const teamMembers = [
   },
   {
     name: "Netra Sarvankar",
-    image: null,
+    image: "/images/netra.sarvankar.jpeg",
   },
   {
     name: "Soham Shirole",
-    image: null,
+    image: "/images/soham.shirole.jpeg",
   },
   {
     name: "Shruti Shinde",
-    image: null,
+    image: "/images/shruti.shinde.jpeg",
   },
 ]
 
@@ -103,32 +103,35 @@ export function InfoContent() {
           </div>
         </div>
 
-        {/* Important Notices */}
-        <div className="flex flex-col gap-4 rounded-2xl border-2 border-primary/15 bg-card p-6 shadow-md">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15">
-              <Bell className="h-5 w-5 text-accent" />
-            </div>
-            <h2 className="font-serif text-xl font-bold text-card-foreground">
-              Important Notices
-            </h2>
-          </div>
-          <div className="flex flex-col gap-3">
-            {canteenInfo.notices.map((notice, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-xl border border-border p-4 transition-all duration-200 hover:bg-primary/5"
-              >
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  {i + 1}
-                </span>
-                <p className="text-sm leading-relaxed text-card-foreground">
-                  {notice}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Project Information */}
+
+<section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm">
+
+  <h3 className="font-serif text-xl font-bold text-card-foreground">
+    About This Project
+  </h3>
+
+  <p className="text-sm text-muted-foreground leading-relaxed">
+    The Smart College Canteen system is designed to improve the food service
+    experience for students and staff at PCCOER. This project provides a
+    digital platform where users can easily view the daily menu, check food
+    availability, and stay updated with canteen timings.
+  </p>
+
+  <p className="text-sm text-muted-foreground leading-relaxed">
+    The goal of this project is to reduce waiting time at the canteen counter,
+    improve communication between the canteen staff and students, and provide
+    real-time updates about available food items. The system is powered by
+    modern web technologies with a dynamic database so that menu items and
+    timings can be updated instantly.
+  </p>
+
+  <p className="text-sm text-muted-foreground leading-relaxed">
+    This project demonstrates how technology can be used to make everyday
+    campus services smarter, faster, and more convenient for students.
+  </p>
+
+</section>
 
         {/* Contact & Location */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -158,7 +161,7 @@ export function InfoContent() {
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary/60" />
-                <span>+91 98765 43210</span>
+                <span>+91 0000000000</span>
               </div>
               <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary/60" />
