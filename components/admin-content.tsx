@@ -1,56 +1,56 @@
 "use client"
 
 import { useState, useEffect } from "react"
+<<<<<<< HEAD
 import React from "react"
 import { supabase } from "@/lib/supabase"
+=======
+>>>>>>> da525b450970cb166f2e22051d48274657cefd80
 import {
   Lock,
   LogIn,
   Plus,
   Pencil,
   Trash2,
-  X,
-  Check,
   Eye,
   EyeOff,
-  LogOut,
-  Mail,
-  KeyRound,
-  Clock,
-  Save,
-  Sunrise,
-  Utensils,
-  Cookie,
-  Coffee,
+  LogOut
 } from "lucide-react"
+<<<<<<< HEAD
 import { categoryLabels } from "@/lib/data"
 import type { MenuItem } from "@/lib/data"
 import { cn } from "@/lib/utils"
+=======
+>>>>>>> da525b450970cb166f2e22051d48274657cefd80
 
-const timingIcons: Record<string, React.ReactNode> = {
-  Breakfast: <Sunrise className="h-4 w-4 text-primary" />,
-  Lunch: <Utensils className="h-4 w-4 text-primary" />,
-  Snacks: <Cookie className="h-4 w-4 text-primary" />,
-  Beverages: <Coffee className="h-4 w-4 text-primary" />,
-}
+import { supabase } from "@/lib/supabase"
+import type { MenuItem } from "@/lib/data"
 
 export function AdminContent() {
+
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState("")
+<<<<<<< HEAD
   const [items, setItems] = useState<MenuItem[]>([])
   
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
+=======
+
+  const [items, setItems] = useState<MenuItem[]>([])
+>>>>>>> da525b450970cb166f2e22051d48274657cefd80
   const [isAdding, setIsAdding] = useState(false)
+
   const [newItem, setNewItem] = useState<Omit<MenuItem, "id">>({
     name: "",
     price: 0,
     category: "breakfast",
     available: true,
-    description: "",
+    description: ""
   })
+<<<<<<< HEAD
   useEffect(() => {
   fetchMenu()
   fetchTimings()
@@ -87,21 +87,51 @@ async function fetchTimings() {
 }
   const [timings, setTimings] = useState<any[]>([])
   const [timingsSaved, setTimingsSaved] = useState(false)
+=======
+>>>>>>> da525b450970cb166f2e22051d48274657cefd80
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || !password) {
-      setLoginError("Please fill in all fields")
+  // LOAD MENU FROM DATABASE
+  useEffect(() => {
+    fetchMenu()
+  }, [])
+
+  async function fetchMenu() {
+
+    const { data, error } = await supabase
+      .from("menu")
+      .select("*")
+      .order("id")
+
+    if (error) {
+      console.error("Error loading menu:", error)
       return
     }
-    if (email === "admin@canteen.edu" && password === "admin123") {
-      setIsLoggedIn(true)
-      setLoginError("")
-    } else {
-      setLoginError("Invalid credentials. Try admin@canteen.edu / admin123")
+
+    if (data) {
+      setItems(data)
     }
+
   }
 
+  // LOGIN
+  const handleLogin = (e: React.FormEvent) => {
+
+    e.preventDefault()
+
+    if (email === "admin@canteen.edu" && password === "admin123") {
+
+      setIsLoggedIn(true)
+      setLoginError("")
+
+    } else {
+
+      setLoginError("Invalid credentials")
+
+    }
+
+  }
+
+<<<<<<< HEAD
  const handleDelete = async (id: number) => {
 
   const { error } = await supabase
@@ -243,309 +273,231 @@ async function fetchTimings() {
 
 }
   // ---- Login Screen ----
+=======
+  // DELETE ITEM
+  const handleDelete = async (id: number) => {
+
+    const { error } = await supabase
+      .from("menu")
+      .delete()
+      .eq("id", id)
+
+    if (error) {
+      console.error(error)
+    }
+
+    fetchMenu()
+
+  }
+
+  // ADD ITEM
+  const handleAddItem = async () => {
+
+    if (!newItem.name || newItem.price <= 0) return
+
+    const { error } = await supabase
+      .from("menu")
+      .insert([
+        {
+          name: newItem.name,
+          price: newItem.price,
+          category: newItem.category,
+          available: newItem.available,
+          description: newItem.description
+        }
+      ])
+
+    if (error) {
+      console.error(error)
+    }
+
+    setNewItem({
+      name: "",
+      price: 0,
+      category: "breakfast",
+      available: true,
+      description: ""
+    })
+
+    setIsAdding(false)
+
+    fetchMenu()
+
+  }
+
+  // LOGIN SCREEN
+>>>>>>> da525b450970cb166f2e22051d48274657cefd80
   if (!isLoggedIn) {
+
     return (
       <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4 py-16">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 shadow-md shadow-primary/10">
+
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
           <Lock className="h-8 w-8 text-primary" />
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <h1 className="font-serif text-2xl font-bold text-foreground">
-            Admin Login
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Sign in to manage the PCCOER canteen menu
-          </p>
-        </div>
+
+        <h1 className="text-2xl font-bold">
+          Admin Login
+        </h1>
 
         <form
           onSubmit={handleLogin}
-          className="flex w-full flex-col gap-5 rounded-2xl border border-border bg-card p-6 shadow-lg shadow-primary/5"
+          className="flex w-full flex-col gap-4"
         >
-          {/* Email Field */}
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="email"
-              className="text-sm font-semibold text-card-foreground"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@canteen.edu"
-                className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
-                required
-              />
-            </div>
-          </div>
 
-          {/* Password Field */}
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="password"
-              className="text-sm font-semibold text-card-foreground"
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border p-3 rounded-lg"
+          />
+
+          <div className="relative">
+
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border p-3 rounded-lg w-full"
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3"
             >
-              Password
-            </label>
-            <div className="relative">
-              <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
-            </div>
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+
           </div>
 
           {loginError && (
-            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm font-medium text-destructive">
+            <p className="text-red-500">
               {loginError}
             </p>
           )}
 
           <button
             type="submit"
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+            className="bg-primary text-white p-3 rounded-lg flex items-center justify-center gap-2"
           >
-            <LogIn className="h-4 w-4" />
-            Sign In
+            <LogIn className="h-4 w-4"/>
+            Login
           </button>
+
         </form>
 
-        <p className="text-xs text-muted-foreground">
-          Demo: admin@canteen.edu / admin123
+        <p className="text-sm text-gray-500">
+          admin@canteen.edu / admin123
         </p>
+
       </div>
     )
+
   }
 
-  // ---- Admin Dashboard ----
+  // ADMIN DASHBOARD
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-serif text-3xl font-bold text-foreground">
-            Admin Dashboard
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Manage menu items and canteen timings
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsAdding(true)}
-            className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <Plus className="h-4 w-4" />
-            Add Item
-          </button>
-          <button
-            onClick={() => setIsLoggedIn(false)}
-            className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-card-foreground transition-colors hover:bg-secondary"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
-        </div>
+
+    <div className="mx-auto max-w-6xl p-6 flex flex-col gap-6">
+
+      <div className="flex justify-between items-center">
+
+        <h1 className="text-3xl font-bold">
+          Admin Dashboard
+        </h1>
+
+        <button
+          onClick={() => setIsLoggedIn(false)}
+          className="border px-4 py-2 rounded-lg flex items-center gap-2"
+        >
+          <LogOut className="h-4 w-4"/>
+          Logout
+        </button>
+
       </div>
 
-      {/* ===== CANTEEN TIMING MANAGEMENT ===== */}
-      <div className="rounded-2xl border-2 border-primary/20 bg-card p-6 shadow-md">
-        <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-            <Clock className="h-5 w-5 text-primary" />
-          </div>
-          <div className="flex flex-col">
-            <h2 className="font-serif text-lg font-bold text-card-foreground">
-              Canteen Timing Management
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              Update the timings for each meal category
-            </p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {timings.map((timing, index) => (
-            <div
-              key={timing.label}
-              className="flex flex-col gap-2 rounded-xl border border-border bg-background p-4 transition-all duration-200 hover:border-primary/30"
-            >
-              <div className="flex items-center gap-2">
-                {timingIcons[timing.label]}
-                <label className="text-sm font-bold text-card-foreground">
-                  {timing.label} Timing
-                </label>
-              </div>
-              <input
-                type="text"
-                value={timing.time}
-                onChange={(e) => handleUpdateTiming(index, e.target.value)}
-                placeholder="e.g. 8:30 AM - 10:30 AM"
-                className="rounded-xl border border-input bg-card px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
-              />
-            </div>
-          ))}
-        </div>
-        <div className="mt-5 flex items-center gap-3">
-          <button
-            onClick={handleSaveTimings}
-            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <Save className="h-4 w-4" />
-            Save Timings
-          </button>
-          {timingsSaved && (
-            <span className="flex items-center gap-1.5 text-sm font-medium text-success">
-              <Check className="h-4 w-4" />
-              Timings saved successfully
-            </span>
-          )}
-        </div>
-      </div>
+      <button
+        onClick={() => setIsAdding(true)}
+        className="bg-primary text-white px-4 py-2 rounded-lg w-fit flex items-center gap-2"
+      >
+        <Plus className="h-4 w-4"/>
+        Add Item
+      </button>
 
-      {/* ===== MENU MANAGEMENT ===== */}
-      <div className="flex items-center gap-3">
-        <h2 className="font-serif text-xl font-bold text-foreground">
-          Menu Items
-        </h2>
-        <span className="rounded-lg bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
-          {items.length} items
-        </span>
-      </div>
-
-      {/* Add Item Form */}
       {isAdding && (
-        <div className="rounded-2xl border-2 border-primary/20 bg-card p-6 shadow-md">
-          <div className="mb-5 flex items-center justify-between">
-            <h3 className="font-serif text-lg font-bold text-card-foreground">
-              Add New Item
-            </h3>
-            <button
-              onClick={() => setIsAdding(false)}
-              className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              aria-label="Close add form"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Name
-              </label>
-              <input
-                type="text"
-                value={newItem.name}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, name: e.target.value })
-                }
-                placeholder="Item name"
-                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Price (INR)
-              </label>
-              <input
-                type="number"
-                value={newItem.price || ""}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, price: Number(e.target.value) })
-                }
-                placeholder="0"
-                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Category
-              </label>
-              <select
-                value={newItem.category}
-                onChange={(e) =>
-                  setNewItem({
-                    ...newItem,
-                    category: e.target.value as MenuItem["category"],
-                  })
-                }
-                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="snacks">Snacks</option>
-                <option value="beverages">Beverages</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Description
-              </label>
-              <input
-                type="text"
-                value={newItem.description}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, description: e.target.value })
-                }
-                placeholder="Short description"
-                className="rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center gap-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-card-foreground">
-              <input
-                type="checkbox"
-                checked={newItem.available}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, available: e.target.checked })
-                }
-                className="h-4 w-4 rounded border-input accent-primary"
-              />
-              Available
-            </label>
-          </div>
-          <div className="mt-5 flex gap-2">
-            <button
-              onClick={handleAddItem}
-              disabled={!newItem.name || newItem.price <= 0}
-              className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
-            >
-              <Check className="h-4 w-4" />
-              Add Item
-            </button>
-            <button
-              onClick={() => setIsAdding(false)}
-              className="rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-card-foreground transition-colors hover:bg-secondary"
-            >
-              Cancel
-            </button>
-          </div>
+
+        <div className="border p-4 rounded-lg flex flex-col gap-3">
+
+          <input
+            placeholder="Item Name"
+            value={newItem.name}
+            onChange={(e) =>
+              setNewItem({ ...newItem, name: e.target.value })
+            }
+            className="border p-2 rounded"
+          />
+
+          <input
+            type="number"
+            placeholder="Price"
+            value={newItem.price}
+            onChange={(e) =>
+              setNewItem({
+                ...newItem,
+                price: Number(e.target.value)
+              })
+            }
+            className="border p-2 rounded"
+          />
+
+          <select
+            value={newItem.category}
+            onChange={(e) =>
+              setNewItem({
+                ...newItem,
+                category: e.target.value as MenuItem["category"]
+              })
+            }
+            className="border p-2 rounded"
+          >
+
+            <option value="breakfast">
+              Breakfast
+            </option>
+
+            <option value="lunch">
+              Lunch
+            </option>
+
+            <option value="snacks">
+              Snacks
+            </option>
+
+            <option value="beverages">
+              Beverages
+            </option>
+
+          </select>
+
+          <button
+            onClick={handleAddItem}
+            className="bg-primary text-white px-4 py-2 rounded"
+          >
+            Save Item
+          </button>
+
         </div>
+
       )}
 
+<<<<<<< HEAD
       {/* Menu Items Table */}
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         {/* Desktop Table */}
@@ -745,10 +697,44 @@ async function fetchTimings() {
                   </button>
                 </div>
               </div>
+=======
+      <div className="border rounded-lg overflow-hidden">
+
+        {items.map((item) => (
+
+          <div
+            key={item.id}
+            className="flex justify-between p-4 border-b"
+          >
+
+            <div>
+
+              <p className="font-semibold">
+                {item.name}
+              </p>
+
+              <p className="text-sm text-gray-500">
+                ₹{item.price}
+              </p>
+
+>>>>>>> da525b450970cb166f2e22051d48274657cefd80
             </div>
-          ))}
-        </div>
+
+            <button
+              onClick={() => handleDelete(item.id)}
+              className="text-red-500"
+            >
+              <Trash2 className="h-4 w-4"/>
+            </button>
+
+          </div>
+
+        ))}
+
       </div>
+
     </div>
+
   )
+
 }
