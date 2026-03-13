@@ -327,9 +327,7 @@ const handleSaveTimings = async () => {
 
         </form>
 
-        <p className="text-sm text-gray-500">
-          admin@canteen.edu / admin123
-        </p>
+    
 
       </div>
     )
