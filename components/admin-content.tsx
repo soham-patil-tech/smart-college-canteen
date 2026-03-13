@@ -35,14 +35,14 @@ export function AdminContent() {
   const [isAdding, setIsAdding] = useState(false)
 
   const [newItem, setNewItem] = useState<Omit<MenuItem, "id">>({
-    name: "",
-    price: 0,
-    category: "breakfast",
-    available: true,
-    description: ""
-  })
+  name: "",
+  price: 0,
+  category: "breakfast",
+  available: true,
+  description: ""
+})
 
-  const [timings, setTimings] = useState<any[]>([])
+  const [timings, setTimings] = useState<{label:string,time:string}[]>([])
   const [timingsSaved, setTimingsSaved] = useState(false)
 
   useEffect(() => {
@@ -76,7 +76,7 @@ async function fetchTimings() {
 
   if (!error && data) {
 
-    const formatted = data.map((t) => ({
+    const formatted = data.map((t: any) => ({
       label: t.category,
       time: `${t.start_time} - ${t.end_time}`
     }))
@@ -367,69 +367,111 @@ const handleSaveTimings = async () => {
 
        {isAdding && (
 
-        <div className="border p-4 rounded-lg flex flex-col gap-3">
+<div className="border p-6 rounded-2xl bg-white shadow-md flex flex-col gap-4 max-w-xl">
 
-          <input
-            placeholder="Item Name"
-            value={newItem.name}
-            onChange={(e) =>
-              setNewItem({ ...newItem, name: e.target.value })
-            }
-            className="border p-2 rounded"
-          />
+  <input
+    placeholder="Item Name"
+    value={newItem.name}
+    onChange={(e) =>
+      setNewItem({ ...newItem, name: e.target.value })
+    }
+    className="border p-3 rounded-lg"
+  />
 
-          <input
-            type="number"
-            placeholder="Price"
-            value={newItem.price}
-            onChange={(e) =>
-              setNewItem({
-                ...newItem,
-                price: Number(e.target.value)
-              })
-            }
-            className="border p-2 rounded"
-          />
+  <input
+    placeholder="Description"
+    value={newItem.description}
+    onChange={(e) =>
+      setNewItem({ ...newItem, description: e.target.value })
+    }
+    className="border p-3 rounded-lg"
+  />
 
-          <select
-            value={newItem.category}
-            onChange={(e) =>
-              setNewItem({
-                ...newItem,
-                category: e.target.value as MenuItem["category"]
-              })
-            }
-            className="border p-2 rounded"
-          >
+  <input
+  type="number"
+  placeholder="Price"
+  value={newItem.price === 0 ? "" : newItem.price}
+  onChange={(e) =>
+    setNewItem({
+      ...newItem,
+      price: Number(e.target.value)
+    })
+  }
+  className="border p-3 rounded-lg"
+/>
 
-            <option value="breakfast">
-              Breakfast
-            </option>
+  <select
+    value={newItem.category}
+    onChange={(e) =>
+      setNewItem({
+        ...newItem,
+        category: e.target.value as MenuItem["category"]
+      })
+    }
+    className="border p-3 rounded-lg"
+  >
+    <option value="breakfast">Breakfast</option>
+    <option value="lunch">Lunch</option>
+    <option value="snacks">Snacks</option>
+    <option value="beverages">Beverages</option>
+  </select>
 
-            <option value="lunch">
-              Lunch
-            </option>
+  <button
+    onClick={handleAddItem}
+    className="bg-primary text-white py-3 rounded-lg font-semibold"
+  >
+    Save Item
+  </button>
 
-            <option value="snacks">
-              Snacks
-            </option>
-
-            <option value="beverages">
-              Beverages
-            </option>
-
-          </select>
-
-          <button
-            onClick={handleAddItem}
-            className="bg-primary text-white px-4 py-2 rounded"
-          >
-            Save Item
-          </button>
-
-        </div>
+</div>
 
       )}
+
+{/* Timings Editor */}
+
+<div className="border rounded-xl p-4 bg-white shadow-sm">
+
+  <h2 className="text-lg font-semibold mb-4">
+    Edit Menu Timings
+  </h2>
+
+    {timings.map((t, index) => (
+    <div key={index} 
+    className="flex items-center gap-4 mb-3">
+
+      <span className="w-32 font-medium">
+        {t.label}
+      </span>
+
+      <input
+        type="text"
+        value={t.time}
+        onChange={(e) =>
+          handleUpdateTiming(index, e.target.value)
+        }
+        className="border p-2 rounded w-60"
+        placeholder="8:00 AM - 11:00 AM"
+      />
+
+    </div>
+
+  ))}
+
+  <button
+    onClick={handleSaveTimings}
+    className="bg-primary text-white px-4 py-2 rounded-lg mt-2"
+  >
+    Save Timings
+  </button>
+
+  {timingsSaved && (
+    <p className="text-green-600 mt-2">
+      Timings updated successfully
+    </p>
+  )}
+
+</div>
+
 
       {/* Menu Items Table */}
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -631,67 +673,93 @@ const handleSaveTimings = async () => {
 
         </div>
 
-        {/* Mobile Cards */}
+{/* Mobile Cards */}
 
-        <div className="flex flex-col divide-y md:hidden">
+<div className="flex flex-col divide-y md:hidden">
 
-          {items.map((item) => (
+  {items.map((item) => (
 
-            <div key={item.id} className="flex flex-col gap-3 p-4">
+    <div key={item.id} className="flex flex-col gap-3 p-4">
 
-              <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between">
 
-                <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5">
 
-                  <span className="text-sm font-semibold">
-                    {item.name}
-                  </span>
+          <span className="text-sm font-semibold">
+            {item.name}
+          </span>
 
-                  {item.description && (
-                    <span className="text-xs text-muted-foreground">
-                      {item.description}
-                    </span>
-                  )}
-
-                </div>
-
-                <span className="text-sm font-bold text-primary">
-                  ₹{item.price}
-                </span>
-
-              </div>
-
-              <div className="flex items-center justify-between">
-
-                <span className="rounded-lg bg-secondary px-2 py-0.5 text-xs font-semibold">
-                  {categoryLabels[item.category]}
-                </span>
-
-                <div className="flex items-center gap-2">
-
-                  <button
-                    onClick={() => setEditingItem({ ...item })}
-                    className="p-1.5 hover:bg-blue-50 rounded"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(Number(item.id))}
-                    className="p-1.5 hover:bg-red-50 rounded"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          ))}
+          {item.description && (
+            <span className="text-xs text-muted-foreground">
+              {item.description}
+            </span>
+          )}
 
         </div>
+
+        <span className="text-sm font-bold text-primary">
+          ₹{item.price}
+        </span>
+
+      </div>
+
+      <div className="flex items-center justify-between">
+
+        {/* Category + Availability */}
+        <div className="flex items-center gap-2">
+
+          <span className="rounded-lg bg-secondary px-2 py-0.5 text-xs font-semibold">
+            {categoryLabels[item.category]}
+          </span>
+
+          <button
+            onClick={() => handleToggleAvailability(Number(item.id))}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold",
+              item.available
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            )}
+          >
+            <span
+              className={cn(
+                "h-1.5 w-1.5 rounded-full",
+                item.available ? "bg-green-600" : "bg-red-600"
+              )}
+            />
+
+            {item.available ? "Available" : "Unavailable"}
+
+          </button>
+
+        </div>
+
+        {/* Edit + Delete */}
+        <div className="flex items-center gap-2">
+
+          <button
+            onClick={() => setEditingItem({ ...item })}
+            className="p-1.5 hover:bg-blue-50 rounded"
+          >
+            <Pencil className="h-4 w-4" />
+          </button>
+
+          <button
+            onClick={() => handleDelete(Number(item.id))}
+            className="p-1.5 hover:bg-red-50 rounded"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  ))}
+
+          </div>
 
       </div>
 
