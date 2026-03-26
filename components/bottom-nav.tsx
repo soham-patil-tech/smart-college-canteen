@@ -9,7 +9,6 @@ const navLinks = [
   { href: "/", label: "Home", icon: Home },
   { href: "/menu", label: "Menu", icon: UtensilsCrossed },
   { href: "/info", label: "Info", icon: Info },
-  { href: "/admin", label: "Admin", icon: ShieldCheck },
 ]
 
 export function BottomNav() {
