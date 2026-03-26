@@ -28,12 +28,7 @@ export default async function AdminPage() {
 
       <main className="flex-1 pb-20 md:pb-0">
 
-        <AdminContent
-          menu={menu || []}
-          notices={notices || []}
-          timings={timings || []}
-        />
-
+        <AdminContent />
       </main>
 
       <Footer />
